@@ -1,16 +1,139 @@
 package us.jeff_wilson.mystop;
 
+import android.app.Activity;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
+
+    TransitDatabase _theDatabase;
+    Spinner MetroSpinner;
+    Spinner SystemSpinner;
+    Spinner LineSpinner;
+    Spinner StopSpinner;
+    Button SelectButton;
+    public static MainActivity activity;
+    public MetroArea selectedMetroArea;
+    public TransitSystem selectedSystem;
+    public TransitLine selectedLine;
+    public TransitLineStop selectedStop;
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        _theDatabase = new TransitDatabase();
+        _theDatabase.loadData();
+        activity = this;
+
         setContentView(R.layout.activity_main);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        MetroSpinner = (Spinner) findViewById(R.id.MetroSpinner);
+        SystemSpinner = (Spinner) findViewById(R.id.SystemSpinner);
+        LineSpinner = (Spinner) findViewById(R.id.LineSpinner);
+        StopSpinner = (Spinner) findViewById(R.id.StopSpinner);
+        Button SelectButton = (Button) findViewById(R.id.SelectButton);
+
+        selectedMetroArea = null;
+        selectedSystem = null;
+        selectedLine = null;
+        selectedStop = null;
+
+        Set<String> manSet = _theDatabase.getMetroAreaNames();
+        String[] manStrings = manSet.toArray(new String[manSet.size()]);
+        ArrayAdapter<String> metroAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, manStrings);
+        MetroSpinner.setAdapter(metroAdapter);
+
+        MetroSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
+
+                String metroName = adapterView.getItemAtPosition(index).toString();
+                MetroArea ma = _theDatabase.findMetroArea(metroName);
+                MainActivity.activity.selectedMetroArea = ma;
+
+                Set<String> sysNamesSet = ma.getSystemNames();
+                String[] sysStrings = sysNamesSet.toArray(new String[sysNamesSet.size()]);
+                ArrayAdapter<String> sysAdapter = new ArrayAdapter<String>(MainActivity.activity,
+                        android.R.layout.simple_spinner_item, sysStrings);
+                SystemSpinner.setAdapter(sysAdapter);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        SystemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
+
+                // update for system name
+                String systemName = adapterView.getItemAtPosition(index).toString();
+                TransitSystem ts = MainActivity.activity.selectedMetroArea.findSystem(systemName);
+                MainActivity.activity.selectedSystem = ts;
+                Set<String> lineNamesSet = ts.getLineNames();
+                String[] lineStrings = lineNamesSet.toArray(new String[lineNamesSet.size()]);
+                ArrayAdapter<String> sysAdapter = new ArrayAdapter<String>(MainActivity.activity,
+                        android.R.layout.simple_spinner_item, lineStrings);
+                LineSpinner.setAdapter(sysAdapter);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        LineSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
+
+                // update for system name
+                String lineName = adapterView.getItemAtPosition(index).toString();
+                TransitLine tl = MainActivity.activity.selectedSystem.findLine(lineName);
+                MainActivity.activity.selectedLine = tl;
+                Set<String> stopNamesSet = tl.getStopNames();
+                String[] stopStrings = stopNamesSet.toArray(new String[stopNamesSet.size()]);
+                ArrayAdapter<String> stopAdapter = new ArrayAdapter<String>(MainActivity.activity,
+                        android.R.layout.simple_spinner_item, stopStrings);
+                StopSpinner.setAdapter(stopAdapter);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
     }
 
     @Override
@@ -33,5 +156,45 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://us.jeff_wilson.mystop/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://us.jeff_wilson.mystop/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 }
