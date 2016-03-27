@@ -35,6 +35,18 @@ public class TransitDatabase {
         MetroArea boston = createMetroArea("Boston");
 
         MetroArea chicago = createMetroArea("Chicago");
+        TransitSystem ctaL = chicago.createSystem("CTA L");
+        TransitLine ctaLRed = ctaL.createLine("Red");
+        TransitLine ctaLBlue = ctaL.createLine("Blue");
+        TransitLine ctaLBrown = ctaL.createLine("Brown");
+        TransitLine ctaLGreen = ctaL.createLine("Green");
+        TransitLine ctaLOrange = ctaL.createLine("Orange");
+        TransitLine ctaLPurple = ctaL.createLine("Purple");
+        TransitLine ctaLPink = ctaL.createLine("Pink");
+        TransitLine ctaLYellow = ctaL.createLine("Yellow");
+
+        TransitSystem cteBus = chicago.createSystem("CTA Bus");
+        TransitSystem chicagoMetra = chicago.createSystem("Metra");
 
         MetroArea nyc = createMetroArea("New York City");
         TransitSystem metroNorth = nyc.createSystem("Metro North");
@@ -42,8 +54,10 @@ public class TransitDatabase {
         TransitLine harlemLine = metroNorth.createLine("Harlem");
         TransitLine newHavenLine = metroNorth.createLine("New Haven");
 
-        Location pokLoc = new Location("test");
-        TransitLineStop pokStop = hudsonLine.createStop("Poughkeepsie", pokLoc);
+        Location testLoc = new Location("test");
+        TransitLineStop pokStop = hudsonLine.createStop("Poughkeepsie", testLoc);
+        TransitLineStop newHambStop = hudsonLine.createStop("New Hamburgh", testLoc);
+        TransitLineStop beaconStop = hudsonLine.createStop("Beacon", testLoc);
 
         TransitSystem LIRR = nyc.createSystem("Long Island Rail Road");
 

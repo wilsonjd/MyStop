@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         Set<String> manSet = _theDatabase.getMetroAreaNames();
         String[] manStrings = manSet.toArray(new String[manSet.size()]);
         ArrayAdapter<String> metroAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, manStrings);
+                R.layout.spinner_item, manStrings);
         MetroSpinner.setAdapter(metroAdapter);
 
         MetroSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -78,9 +78,12 @@ public class MainActivity extends AppCompatActivity {
                 Set<String> sysNamesSet = ma.getSystemNames();
                 String[] sysStrings = sysNamesSet.toArray(new String[sysNamesSet.size()]);
                 ArrayAdapter<String> sysAdapter = new ArrayAdapter<String>(MainActivity.activity,
-                        android.R.layout.simple_spinner_item, sysStrings);
+                        R.layout.spinner_item, sysStrings);
                 SystemSpinner.setAdapter(sysAdapter);
-
+                LineSpinner.setAdapter(new ArrayAdapter<String>(MainActivity.activity,
+                        R.layout.spinner_item));
+                StopSpinner.setAdapter(new ArrayAdapter<String>(MainActivity.activity,
+                        R.layout.spinner_item));
             }
 
             @Override
@@ -100,9 +103,10 @@ public class MainActivity extends AppCompatActivity {
                 Set<String> lineNamesSet = ts.getLineNames();
                 String[] lineStrings = lineNamesSet.toArray(new String[lineNamesSet.size()]);
                 ArrayAdapter<String> sysAdapter = new ArrayAdapter<String>(MainActivity.activity,
-                        android.R.layout.simple_spinner_item, lineStrings);
+                        R.layout.spinner_item, lineStrings);
                 LineSpinner.setAdapter(sysAdapter);
-
+                StopSpinner.setAdapter(new ArrayAdapter<String>(MainActivity.activity,
+                        R.layout.spinner_item));
             }
 
             @Override
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 Set<String> stopNamesSet = tl.getStopNames();
                 String[] stopStrings = stopNamesSet.toArray(new String[stopNamesSet.size()]);
                 ArrayAdapter<String> stopAdapter = new ArrayAdapter<String>(MainActivity.activity,
-                        android.R.layout.simple_spinner_item, stopStrings);
+                        R.layout.spinner_item, stopStrings);
                 StopSpinner.setAdapter(stopAdapter);
 
             }
