@@ -1,6 +1,8 @@
 package us.jeff_wilson.mystop;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.widget.Spinner;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Set;
 
@@ -138,6 +141,41 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        StopSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int index, long l) {
+
+                // update for system name
+                String stopName = adapterView.getItemAtPosition(index).toString();
+                TransitLineStop st = MainActivity.activity.selectedLine.findStop(stopName);
+                MainActivity.activity.selectedStop = st;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+    SelectButton.setOnClickListener(new AdapterView.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            System.out.println("button click");
+            System.out.println("selected stop = " + selectedStop);
+
+            if (selectedStop != null) {
+                Location l = selectedStop.getLocation();
+
+                MapActivity.myPos = new LatLng(l.getLatitude(), l.getLongitude());
+
+
+                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                startActivity(intent);
+            }
+
+        }
+    });
     }
 
     @Override

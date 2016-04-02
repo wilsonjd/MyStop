@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+// import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by Jeff on 3/22/2016.
  */
@@ -54,8 +56,17 @@ public class TransitDatabase {
         TransitLine harlemLine = metroNorth.createLine("Harlem");
         TransitLine newHavenLine = metroNorth.createLine("New Haven");
 
+        // LatLng myLoc = new LatLng();
+
         Location testLoc = new Location("test");
+        testLoc.setLatitude(41.706641);  // myLoc.lattitude
+        testLoc.setLongitude(-73.938001); // myLoc.longitude
+
         TransitLineStop pokStop = hudsonLine.createStop("Poughkeepsie", testLoc);
+
+        testLoc = new Location("test");
+        testLoc.setLatitude(41.586692);
+        testLoc.setLongitude(-73.947494);
         TransitLineStop newHambStop = hudsonLine.createStop("New Hamburgh", testLoc);
         TransitLineStop beaconStop = hudsonLine.createStop("Beacon", testLoc);
 
