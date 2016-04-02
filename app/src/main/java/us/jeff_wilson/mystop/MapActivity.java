@@ -69,9 +69,10 @@ public class MapActivity extends Activity {
             // Show Zoom buttons
             googleMap.getUiSettings().setZoomControlsEnabled(true);
 
+            String stopName = MainActivity.activity.selectedStop.getName();
             // Create a marker in the map at a given position with a title
             Marker marker = googleMap.addMarker(new MarkerOptions().
-                    position(myPos).title("Hello"));
+                    position(myPos).title(stopName));
             moveToCurrentLocation(myPos);
 
         } catch (Exception e) {

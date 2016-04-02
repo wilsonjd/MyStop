@@ -14,6 +14,61 @@ import java.util.Set;
 public class TransitDatabase {
     Map<String, MetroArea> _metroAreas;
 
+    TransitLineStop[] hudsonLineStops;
+
+    String[] hudsonLineStopNames = {
+             "Poughkeepsie",
+             "New Hamburgh",
+             "Beacon",
+             "Cold Spring",
+             "Garrison",
+             "Peekskill",
+             "Cortlandt",
+             "Croton-Harmon",
+             "Ossining",
+             "Tarrytown",
+             "Yonkers",
+             "Marble Hill",
+             "Harlem-125th Street",
+             "Grand Central Terminal",
+    };
+    double[] hudsonLineLatLng = {
+            41.706641, -73.938001,
+            41.586692, -73.947494,
+            41.506443, -73.984787,
+            41.415232, -73.958063,
+            41.380994, -73.947398,
+            41.284894, -73.931391,
+            41.247025, -73.923111,
+            41.189820, -73.882692,
+            41.157602, -73.869118,
+            41.075528, -73.865103,
+            40.936769, -73.901762,
+            40.874943, -73.91206,
+            40.805082, -73.939018,
+            40.752838, -73.977139,
+    };
+
+    /*
+        StopInfo hudsonLineStops[] = {
+                { "Poughkeepsie", 41.706641, -73.938001},
+                { "New Hamburgh", 41.586692, -73.947494},
+                { "Beacon", 41.506443, -73.984787},
+                { "Cold Spring", 41.415232, -73.958063},
+                { "Garrison", 41.380994, -73.947398},
+                { "Peekskill", 41.284894, -73.931391},
+                { "Cortlandt", 41.247025, -73.923111},
+                { "Croton-Harmon", 41.189820, -73.882692},
+                { "Ossining", 41.157602, -73.869118},
+                { "Tarrytown", 41.075528, -73.865103},
+                { "Yonkers", 40.936769, -73.901762},
+                { "Marble Hill", 40.874943, -73.91206},
+                { "Harlem-125th Street", 40.805082, -73.939018},
+                { "Grand Central Terminal", 40.752838, -73.977139},
+        };
+        */
+
+
     TransitDatabase() { _metroAreas = new HashMap<>(); }
 
     public MetroArea findMetroArea(String name) {
@@ -57,18 +112,13 @@ public class TransitDatabase {
         TransitLine newHavenLine = metroNorth.createLine("New Haven");
 
         // LatLng myLoc = new LatLng();
-
-        Location testLoc = new Location("test");
-        testLoc.setLatitude(41.706641);  // myLoc.lattitude
-        testLoc.setLongitude(-73.938001); // myLoc.longitude
-
-        TransitLineStop pokStop = hudsonLine.createStop("Poughkeepsie", testLoc);
-
-        testLoc = new Location("test");
-        testLoc.setLatitude(41.586692);
-        testLoc.setLongitude(-73.947494);
-        TransitLineStop newHambStop = hudsonLine.createStop("New Hamburgh", testLoc);
-        TransitLineStop beaconStop = hudsonLine.createStop("Beacon", testLoc);
+        hudsonLineStops = new TransitLineStop[hudsonLineStopNames.length];
+        for(int i = 0; i < hudsonLineStopNames.length; ++i) {
+            Location testLoc = new Location("test");
+            testLoc.setLatitude(hudsonLineLatLng[i*2]);  // myLoc.lattitude
+            testLoc.setLongitude(hudsonLineLatLng[i*2 + 1]); // myLoc.longitude
+            hudsonLineStops[i] = hudsonLine.createStop(hudsonLineStopNames[i], testLoc);
+        }
 
         TransitSystem LIRR = nyc.createSystem("Long Island Rail Road");
 
