@@ -3,6 +3,7 @@ package us.jeff_wilson.mystop;
 import android.location.Location;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,19 +12,21 @@ import java.util.Set;
  */
 public class TransitLine {
     String _name;
-    Map<String, TransitLineStop> _stopMap;
+    LinkedHashMap<String, TransitLineStop> _stopMap;
     Map<Location, TransitLineStop> _locationStops;
+    TransitSystem _theSystem;
 
-    TransitLine(String n) {
+    TransitLine(TransitSystem system, String n) {
+        _theSystem = system;
         _name = n;
-        _stopMap = new HashMap<>();
+        _stopMap = new LinkedHashMap<>();
         _locationStops = new HashMap<>();
     }
 
     public String getName() { return _name;}
 
     TransitLineStop createStop(String n, Location l) {
-        TransitLineStop s = new TransitLineStop(n, l);
+        TransitLineStop s = new TransitLineStop(this, n, l);
         _stopMap.put(n, s);
         _locationStops.put(l, s);
         return s;

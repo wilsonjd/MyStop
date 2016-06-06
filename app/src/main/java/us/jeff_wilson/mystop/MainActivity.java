@@ -1,6 +1,7 @@
 package us.jeff_wilson.mystop;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
@@ -23,7 +24,7 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-    TransitDatabase _theDatabase;
+    static TransitDatabase _theDatabase;
     Spinner MetroSpinner;
     Spinner SystemSpinner;
     Spinner LineSpinner;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         Set<String> manSet = _theDatabase.getMetroAreaNames();
         String[] manStrings = manSet.toArray(new String[manSet.size()]);
-        ArrayAdapter<String> metroAdapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> metroAdapter = new ArrayAdapter<>(this,
                 R.layout.spinner_item, manStrings);
         MetroSpinner.setAdapter(metroAdapter);
 
@@ -80,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
 
                 Set<String> sysNamesSet = ma.getSystemNames();
                 String[] sysStrings = sysNamesSet.toArray(new String[sysNamesSet.size()]);
-                ArrayAdapter<String> sysAdapter = new ArrayAdapter<String>(MainActivity.activity,
+                ArrayAdapter<String> sysAdapter = new ArrayAdapter<>(MainActivity.activity,
                         R.layout.spinner_item, sysStrings);
                 SystemSpinner.setAdapter(sysAdapter);
-                LineSpinner.setAdapter(new ArrayAdapter<String>(MainActivity.activity,
+                LineSpinner.setAdapter(new ArrayAdapter<>(MainActivity.activity,
                         R.layout.spinner_item));
-                StopSpinner.setAdapter(new ArrayAdapter<String>(MainActivity.activity,
+                StopSpinner.setAdapter(new ArrayAdapter<>(MainActivity.activity,
                         R.layout.spinner_item));
             }
 
@@ -105,10 +106,10 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.activity.selectedSystem = ts;
                 Set<String> lineNamesSet = ts.getLineNames();
                 String[] lineStrings = lineNamesSet.toArray(new String[lineNamesSet.size()]);
-                ArrayAdapter<String> sysAdapter = new ArrayAdapter<String>(MainActivity.activity,
+                ArrayAdapter<String> sysAdapter = new ArrayAdapter<>(MainActivity.activity,
                         R.layout.spinner_item, lineStrings);
                 LineSpinner.setAdapter(sysAdapter);
-                StopSpinner.setAdapter(new ArrayAdapter<String>(MainActivity.activity,
+                StopSpinner.setAdapter(new ArrayAdapter<>(MainActivity.activity,
                         R.layout.spinner_item));
             }
 
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.activity.selectedLine = tl;
                 Set<String> stopNamesSet = tl.getStopNames();
                 String[] stopStrings = stopNamesSet.toArray(new String[stopNamesSet.size()]);
-                ArrayAdapter<String> stopAdapter = new ArrayAdapter<String>(MainActivity.activity,
+                ArrayAdapter<String> stopAdapter = new ArrayAdapter<>(MainActivity.activity,
                         R.layout.spinner_item, stopStrings);
                 StopSpinner.setAdapter(stopAdapter);
 
@@ -147,8 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // update for system name
                 String stopName = adapterView.getItemAtPosition(index).toString();
-                TransitLineStop st = MainActivity.activity.selectedLine.findStop(stopName);
-                MainActivity.activity.selectedStop = st;
+                MainActivity.activity.selectedStop = MainActivity.activity.selectedLine.findStop(stopName);
             }
 
             @Override
@@ -172,6 +172,19 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
                 startActivity(intent);
+
+                String stopName = selectedStop.getName();
+                String lineName = selectedStop._theLine.getName();
+                String systemName = selectedStop._theLine._theSystem.getName();
+                String metroName = selectedStop._theLine._theSystem._theMetroArea.getName();
+                Intent myIntent = new Intent(MainActivity.this, MyStopBackgroundService.class);
+                myIntent.putExtra("stop_name", stopName);
+                myIntent.putExtra("line_name", lineName);
+                myIntent.putExtra("system_name", systemName);
+                myIntent.putExtra("metro_name", metroName);
+
+                startService(myIntent);
+
             }
 
         }

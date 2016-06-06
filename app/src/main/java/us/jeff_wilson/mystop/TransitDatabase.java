@@ -69,6 +69,44 @@ public class TransitDatabase {
         */
 
 
+    /*
+    StopInfo harlemLineStops[] = {
+            { "Wassaic", 41.814786, -73.562328},
+            { "Dover Plains", 41.742395, -73.576232},
+            { "Wingdale", 41.637419, -73.571653},
+            { "Pawling", 41.564667, -73.600348},
+            { "Patterson", 41.511802, -73.604308},
+            { "Southeast", 41.413789, -73.623226},
+            { "Brewster", 41.394546, -73.619880},
+            { "Croton Falls", 41.348107, -73.662206},
+            { "Purdy's", 41.325692, -73.658935},
+            { "Goldens Bridge", 41.294206, -73.677649},
+            { "Katonah", 41.259870, -73.684060},
+            { "Bedford Hills", 41.237240, -73.700098},
+            { "Mt Kisco", 41.208162, -73.729860},
+            { "Chappaqua", 41.158023, -73.774967 },
+            { "Pleasantville", 41.135398, -73.792551 },
+            { "Hawthorne", 41.109577, -73.795925 },
+            { "Valhalla", 41.073070, -73.772817 },
+            { "North White Plains", 41.051143, -73.772550 },
+            { "White Plains", 41.033113, -73.775247 },
+            { "Hartsdale", 41.010840, -73.795901 },
+            { "Scarsdale", 40.989559, -73.808575 },
+            { "Crestwood", 40.959191, -73.820781 },
+            { "Tuckahoe", 40.950288, -73.828917 },
+            { "Bronxville", 40.940327, -73.835045 },
+            { "Fleetwood", 40.926884, -73.839974 },
+            { "Mt Vernon West", 40.912332, -73.850840 },
+            { "Wakefield", 40.906381, -73.855386 },
+            { "Woodlawn", 40.895552, -73.862595 },
+            { "Williams Bridge", 40.878133, -73.871093 },
+            { "Botanical Garden", 40.867201, -73.881902 },
+            { "Fordham", 40.861869, -73.8902210 },
+
+            { "Grand Central Terminal", 40.752838, -73.977139},
+    };
+    */
+
     TransitDatabase() { _metroAreas = new HashMap<>(); }
 
     public MetroArea findMetroArea(String name) {
@@ -76,7 +114,7 @@ public class TransitDatabase {
     }
 
     public MetroArea createMetroArea(String n) {
-        MetroArea m = new MetroArea(n);
+        MetroArea m = new MetroArea(this, n);
         _metroAreas.put(n, m);
         return m;
     }
@@ -121,8 +159,11 @@ public class TransitDatabase {
         }
 
         TransitSystem LIRR = nyc.createSystem("Long Island Rail Road");
+        TransitLine babalonLine = LIRR.createLine("Babalon");
+        TransitLine hempteadLine = LIRR.createLine("Hempstead");
+        TransitLine ronkLine = LIRR.createLine("Ronkonkoma");
 
-        TransitSystem NYCSubway = nyc.createSystem("Subway");
+                TransitSystem NYCSubway = nyc.createSystem("Subway");
 
         MetroArea wash = createMetroArea("Washington");
 

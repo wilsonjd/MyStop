@@ -10,8 +10,10 @@ import java.util.Set;
 public class TransitSystem {
     String _name;
     private Map<String, TransitLine> _lineMap;
+    MetroArea _theMetroArea;
 
-    TransitSystem(String n) {
+    TransitSystem(MetroArea ma, String n) {
+        _theMetroArea = ma;
         _name = n;
         _lineMap = new HashMap<>();
     }
@@ -22,7 +24,7 @@ public class TransitSystem {
     }
 
     public TransitLine createLine(String n) {
-        TransitLine s = new TransitLine(n);
+        TransitLine s = new TransitLine(this, n);
         _lineMap.put(n, s);
         return s;
     }

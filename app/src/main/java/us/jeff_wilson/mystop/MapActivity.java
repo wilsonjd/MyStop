@@ -1,12 +1,14 @@
 package us.jeff_wilson.mystop;
 
 import android.app.Activity;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -24,7 +26,8 @@ public class MapActivity extends Activity {
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
+    private GoogleApiClient indexClient;
+    private GoogleApiClient locationClient;
     private GoogleMap googleMap;
     static LatLng myPos;
 
@@ -46,7 +49,8 @@ public class MapActivity extends Activity {
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        indexClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        locationClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API).build();
 
         try {
             if (googleMap == null) {
@@ -69,6 +73,15 @@ public class MapActivity extends Activity {
             // Show Zoom buttons
             googleMap.getUiSettings().setZoomControlsEnabled(true);
 
+
+            Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    locationClient);
+            if (mLastLocation != null) {
+                Marker myLocMarker = googleMap.addMarker(new MarkerOptions().
+                            position(new LatLng(mLastLocation.getLatitude(),
+                                                mLastLocation.getLongitude())).title("My Location"));
+            }
+
             String stopName = MainActivity.activity.selectedStop.getName();
             // Create a marker in the map at a given position with a title
             Marker marker = googleMap.addMarker(new MarkerOptions().
@@ -86,9 +99,11 @@ public class MapActivity extends Activity {
     public void onStart() {
         super.onStart();
 
+        locationClient.connect();
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
+        indexClient.connect();
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
                 "Map Page", // TODO: Define a title for the content shown.
@@ -99,7 +114,7 @@ public class MapActivity extends Activity {
                 // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://us.jeff_wilson.mystop/http/host/path")
         );
-        AppIndex.AppIndexApi.start(client, viewAction);
+        AppIndex.AppIndexApi.start(indexClient, viewAction);
     }
 
     @Override
@@ -118,7 +133,10 @@ public class MapActivity extends Activity {
                 // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://us.jeff_wilson.mystop/http/host/path")
         );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
+        AppIndex.AppIndexApi.end(indexClient, viewAction);
+        indexClient.disconnect();
+
+        locationClient.disconnect();
+
     }
 }

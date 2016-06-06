@@ -32,6 +32,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAmMa-X1rweblE8JEpxvy3dIcvNoKj30AI" />
 
+        <service
+            android:name=".MyStopBackgroundService"
+            android:exported="false"/>
     </application>
 
 </manifest>

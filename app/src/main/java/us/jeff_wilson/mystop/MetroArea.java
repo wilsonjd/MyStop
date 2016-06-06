@@ -11,8 +11,10 @@ import java.util.Set;
 public class MetroArea {
     String _name;
     Map<String, TransitSystem> _systems;
+    TransitDatabase _theDatabase;
 
-    MetroArea(String n) {
+    MetroArea(TransitDatabase db, String n) {
+        _theDatabase = db;
         _name = new String(n);
         _systems = new HashMap<>();
     }
@@ -23,7 +25,7 @@ public class MetroArea {
     }
 
     TransitSystem createSystem(String n) {
-        TransitSystem s = new TransitSystem(n);
+        TransitSystem s = new TransitSystem(this, n);
         _systems.put(n, s);
         return s;
     }
